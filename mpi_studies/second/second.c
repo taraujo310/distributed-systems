@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
 
   if(my_rank != 0) {
     int number = square_rank(my_rank);
+    printf("Eu sou o processo %d\n", my_rank);
     MPI_Send(&number, 1, MPI_INT, 0, tag, MPI_COMM_WORLD);
   } else {
     int received_number, sum_all=0;
