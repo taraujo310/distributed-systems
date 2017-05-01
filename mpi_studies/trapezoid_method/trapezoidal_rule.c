@@ -6,7 +6,7 @@ float to_the_square(float x);
 
 int main(int argc, char** argv) {
   // MPI specific variables
-  int rank, processes_amount, source;
+  int rank, processes_amount, source, max_rank;
   double start, finish;
 
   // Trapezoid Method specifc variables
@@ -26,12 +26,13 @@ int main(int argc, char** argv) {
   // Processe specific calculation
   interval_start = a + rank * process_intervals * height;
   interval_end = interval_start + process_intervals * height;
-  printf("Process %d calculating the interval [%f, %f]\n", rank, interval_start, interval_end);
+  printf("Process %2d calculating the interval [%f, %f]\n", rank, interval_start, interval_end);
   integral = compute_interval(interval_start, interval_end, process_intervals, height);
 
   MPI_Reduce(&integral, &total, 1, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&rank, &max_rank, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
 
-  MPI_Barrier(MPI_COMM_WORLD);
+  // MPI_Barrier(MPI_COMM_WORLD);
   if(rank == 0) {
     if (remaining_process_intervals != 0) {
       interval_start = a + processes_amount * process_intervals * height;
@@ -42,6 +43,7 @@ int main(int argc, char** argv) {
       total += compute_interval(interval_start, interval_end, remaining_process_intervals, height);
     }
     printf(">>> Resultado: %f\n", total);
+    printf(">>> Max Rank %d\n", max_rank);
   }
 
   finish=MPI_Wtime();

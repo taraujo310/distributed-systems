@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     MPI_Send(message, strlen(message)+1, MPI_CHAR, 0, tag, MPI_COMM_WORLD);
   } else {
     for (origin_process = 1; origin_process < processes_amount; origin_process++) {
-      MPI_Recv(message, 100, MPI_CHAR, origin_process, tag, MPI_COMM_WORLD, &status);
+      MPI_Recv(message, 100, MPI_CHAR, MPI_ANY_SOURCE, tag, MPI_COMM_WORLD, &status);
       printf("%s\n", message);
     }
   }
