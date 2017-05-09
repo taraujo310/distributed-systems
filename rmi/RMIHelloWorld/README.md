@@ -50,6 +50,7 @@ You will need 3 windows of your terminal.
 
 2º) Run the server!
 
+	javac -d bin src/HelloWorld/IHello.java src/HelloWorld/Server.java src/HelloWorld/Client.java
     java -cp bin/ -Djava.rmi.server.codebase=file:/home/thiago/workspace/faculdade/SD/rmi/RMIHelloWorld/bin/ HelloWorld.Server
 
 - The argument -cp introduces the bin folder to the classpath, i.e., it helps java to locate the user classes.
