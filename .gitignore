@@ -63,6 +63,7 @@ dkms.conf
 *.pif
 *.vb
 *.wsf
+*.class
 
 ### Linux ###
 *~
