@@ -8,49 +8,66 @@ public class Resource {
 	static List<Integer> db;
 	static int readCount = 0;
 	static Semaphore mutex = new Semaphore(1);
-        static Semaphore resource = new Semaphore(1);
+    static Semaphore writingMutex = new Semaphore(1);
+    
 	public Resource() {
 		db = new ArrayList<>();
 	}
 	
-	public static void read() throws InterruptedException {
+	private static void requestRead() throws InterruptedException {
 		mutex.acquire();
 		readCount++;
 		if(readCount == 1)
-			resource.acquire();
+			writingMutex.acquire();
 		mutex.release();
-		
-		String info = doRead();
-		System.out.println(info);
-		
+	}
+	
+	private static void releaseRead()  throws InterruptedException {
 		mutex.acquire();
 		readCount--;
 		if(readCount == 0)
-			resource.acquire();
+			writingMutex.release();
 		mutex.release();
 	}
 	
+	public static String read() throws InterruptedException {
+		requestRead();
+		
+		String info = doRead();
+		long threadId = Thread.currentThread().getId();
+		System.out.println("Thread " + threadId + " lendo do arquivo: " + info);
+		
+		releaseRead();
+		
+		return info;
+	}
+	
 	public static void write(int message) throws InterruptedException {
-		Thread t = Thread.currentThread();
-		resource.acquire();
+		writingMutex.acquire();
 		
 		doWrite(message);
 		
-		resource.acquire();
+		writingMutex.release();
 	}
 	
-	public static void doWrite(int number) {
+	public static void doWrite(int number) throws InterruptedException {
+		long threadId = Thread.currentThread().getId();
+		System.out.println("Thread "+ threadId +" escrevendo o número " + number + " no arquivo");
 		db.add(number);
+		Thread.sleep(5000);
 	}
 	
-	public static String doRead() {
-		String[] numbers = new String[db.size()];
-		int i = 0;
+	public static String doRead() throws InterruptedException {
+		String line = "";
 		
 		for(int n : db) {
-			numbers[i++] = "" + n + "";
+			line  += n + ", ";
 		}
+		int endIndex = line.length()-2;
+		endIndex = (endIndex < 0) ? 0 : endIndex;
 		
-		return String.join(", ", numbers);
+		Thread.sleep(500);
+		
+		return line.substring(0, endIndex);
 	}
 }

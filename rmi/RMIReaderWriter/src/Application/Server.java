@@ -4,22 +4,32 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Server implements IHello {
-	public Server() {}
+import ReaderWriter.Controller;
+
+public class Server implements IReaderWriter {
+	private Controller controller;
 	
-	public String say() {
-		return "Hello World!";
+	public Server() {
+		controller = new Controller();
+	}
+	
+	public String read() throws InterruptedException {
+		return controller.read();
+	}
+	
+	public void write(int toInsert) {
+		controller.write(toInsert);
 	}
 	
 	public static void main(String args[]) {
 		try {
-			Server helloServer = new Server();
-			IHello stub = (IHello) UnicastRemoteObject.exportObject(helloServer, 0);
+			Server readerWriterServer = new Server();
+			IReaderWriter stub = (IReaderWriter) UnicastRemoteObject.exportObject(readerWriterServer, 0);
 			
 			Registry registry = LocateRegistry.getRegistry();
-			registry.bind("Hello", stub);
+			registry.bind("readerWriter", stub);
 			
-			System.out.print("Hello Server is ready!");
+			System.out.println("Reader/Writer Server is ready!");
 		} catch (Exception e) {
 			System.err.println("Server Exception: " + e.getMessage());
 			e.printStackTrace();

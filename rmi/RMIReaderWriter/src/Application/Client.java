@@ -9,10 +9,19 @@ public class Client {
 	public static void main(String args[]) {
 		try {
 			Registry registry = LocateRegistry.getRegistry();
-			IHello stub = (IHello) registry.lookup("Hello");
+			IReaderWriter stub = (IReaderWriter) registry.lookup("readerWriter");
 			
-			String response = stub.say();
-			System.out.println("Hello Server says: " + response);
+			String type = args[0].trim();
+			
+			if (type.equals("writer")) {
+				int value = Integer.parseInt(args[1]);
+				stub.write(value);
+			}
+			
+			if (type.equals("reader")) {
+				String info = stub.read();
+				System.out.println(info);
+			}
 			
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.getMessage());
