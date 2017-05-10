@@ -54,7 +54,6 @@ public class Resource {
 		long threadId = Thread.currentThread().getId();
 		System.out.println("Thread "+ threadId +" escrevendo o número " + number + " no arquivo");
 		db.add(number);
-		Thread.sleep(5000);
 	}
 	
 	public static String doRead() throws InterruptedException {
@@ -65,9 +64,7 @@ public class Resource {
 		}
 		int endIndex = line.length()-2;
 		endIndex = (endIndex < 0) ? 0 : endIndex;
-		
-		Thread.sleep(500);
-		
+				
 		return line.substring(0, endIndex);
 	}
 }

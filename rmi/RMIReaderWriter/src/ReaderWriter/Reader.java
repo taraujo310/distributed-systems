@@ -18,7 +18,6 @@ public class Reader implements Runnable {
 	}
 	
 	public String getRead() throws InterruptedException {
-		Thread.sleep(500);
 		return read;
 	}
 
