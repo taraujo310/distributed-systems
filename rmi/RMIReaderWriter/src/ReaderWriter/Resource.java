@@ -2,61 +2,41 @@ package ReaderWriter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Resource {
 	static List<Integer> db;
-	static int resource = 1;
-	static int mutex=1;
 	static int readCount = 0;
-	
+	static Semaphore mutex = new Semaphore(1);
+        static Semaphore resource = new Semaphore(1);
 	public Resource() {
-		db = new ArrayList<Integer>();
+		db = new ArrayList<>();
 	}
 	
 	public static void read() throws InterruptedException {
-		down(mutex);
+		mutex.acquire();
 		readCount++;
 		if(readCount == 1)
-			down(resource);
-		up(mutex);
+			resource.acquire();
+		mutex.release();
 		
 		String info = doRead();
 		System.out.println(info);
 		
-		down(mutex);
+		mutex.acquire();
 		readCount--;
 		if(readCount == 0)
-			up(resource);
-		up(mutex);
+			resource.acquire();
+		mutex.release();
 	}
 	
 	public static void write(int message) throws InterruptedException {
 		Thread t = Thread.currentThread();
-		down(resource);
+		resource.acquire();
 		
 		doWrite(message);
 		
-		up(resource);
-	}
-	
-	private static void down(int semaphore) throws InterruptedException {
-		Thread t = Thread.currentThread();
-		if (semaphore == 0){
-			synchronized(t) {
-				t.wait();
-			}
-		} else 
-			semaphore--;
-	}
-	
-	private static void up(int semaphore) throws InterruptedException {
-		Thread t = Thread.currentThread();
-		if (readCount > 0){
-			synchronized(t) {
-				t.notify();
-			}
-		}else
-			semaphore++;
+		resource.acquire();
 	}
 	
 	public static void doWrite(int number) {
