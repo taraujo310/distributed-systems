@@ -1,14 +1,14 @@
 package ReaderWriter;
 
 public class Controller {
-	Resource db;
+	DataManager data;
 	
-	public Controller() {
-		db = new Resource();
+	public Controller(String file) {
+		data = new DataManager(file);
 	}
 	
 	public String read() throws InterruptedException {
-		Reader r = new Reader(db);
+		Reader r = new Reader(data);
 		Thread t = new Thread(r);
 		t.start();
 		t.join();
@@ -16,6 +16,6 @@ public class Controller {
 	}
 	
 	public void write(int toInsert) {
-		new Thread(new Writer(toInsert, db)).start();
+		new Thread(new Writer(toInsert, data)).start();
 	}
 }

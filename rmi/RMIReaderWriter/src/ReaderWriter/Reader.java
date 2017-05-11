@@ -1,16 +1,16 @@
 package ReaderWriter;
 
 public class Reader implements Runnable {
-	Resource connection;
+	DataManager connection;
 	public String read;
 	
-	public Reader(Resource resource) {
-		connection = resource;
+	public Reader(DataManager data) {
+		connection = data;
 	}
 	
 	public void run() {
 		try {
-			read = Resource.read();
+			read = DataManager.read();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
