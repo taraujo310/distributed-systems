@@ -13,10 +13,12 @@ public class Server implements IReaderWriter {
 		controller = new Controller();
 	}
 	
+        @Override
 	public String read() throws InterruptedException {
 		return controller.read();
 	}
 	
+        @Override
 	public void write(int toInsert) {
 		controller.write(toInsert);
 	}
@@ -25,8 +27,8 @@ public class Server implements IReaderWriter {
 		try {
 			Server readerWriterServer = new Server();
 			IReaderWriter stub = (IReaderWriter) UnicastRemoteObject.exportObject(readerWriterServer, 0);
-			
-			Registry registry = LocateRegistry.getRegistry();
+			Registry registry = LocateRegistry.createRegistry(1099);
+                        
 			registry.bind("readerWriter", stub);
 			
 			System.out.println("Reader/Writer Server is ready!");

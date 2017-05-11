@@ -1,73 +1,48 @@
 package ReaderWriter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Resource {
-	static List<Integer> db;
-	static int readCount = 0;
-	static Semaphore mutex = new Semaphore(1);
-    static Semaphore writingMutex = new Semaphore(1);
-    
-	public Resource() {
-		db = new ArrayList<>();
+	private File file;
+	
+	public Resource(String name) {
+		file = new File(name);
 	}
 	
-	private static void requestRead() throws InterruptedException {
-		mutex.acquire();
-		readCount++;
-		if(readCount == 1)
-			writingMutex.acquire();
-		mutex.release();
-	}
-	
-	private static void releaseRead()  throws InterruptedException {
-		mutex.acquire();
-		readCount--;
-		if(readCount == 0)
-			writingMutex.release();
-		mutex.release();
-	}
-	
-	public static String read() throws InterruptedException {
-		requestRead();
-		
-		String info = doRead();
-		long threadId = Thread.currentThread().getId();
-		System.out.println("Thread " + threadId + " lendo do arquivo: " + info);
-		
-		releaseRead();
-		
-		return info;
-	}
-	
-	public static void write(int message) throws InterruptedException {
-		writingMutex.acquire();
-		
-		doWrite(message);
-		
-		writingMutex.release();
-	}
-	
-	public static void doWrite(int number) throws InterruptedException {
+	public void doWrite(int number) throws InterruptedException, FileNotFoundException {
 		long threadId = Thread.currentThread().getId();
 		System.out.println("Thread "+ threadId +" escrevendo o número " + number + " no arquivo");
-		db.add(number);
-		Thread.sleep(5000);
+		try{
+			FileWriter fileW = new FileWriter (file,true);
+            BufferedWriter buffW = new BufferedWriter (fileW);
+            buffW.newLine();
+			buffW.write(Integer.toString(number));
+			buffW.close();
+		} catch (Exception e){
+			
+		}
 	}
 	
-	public static String doRead() throws InterruptedException {
+	public String doRead() throws InterruptedException {
 		String line = "";
 		
-		for(int n : db) {
-			line  += n + ", ";
+		try{
+			InputStream is = new FileInputStream(file);
+		    InputStreamReader isr = new InputStreamReader(is);
+		    BufferedReader br = new BufferedReader(isr);
+			line = br.readLine();
+			br.close();
+		} catch (Exception e){
+			
 		}
-		int endIndex = line.length()-2;
-		endIndex = (endIndex < 0) ? 0 : endIndex;
-		
-		Thread.sleep(500);
-		
-		return line.substring(0, endIndex);
+				
+		return line;
 	}
 }

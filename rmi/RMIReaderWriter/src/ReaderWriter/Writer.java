@@ -1,18 +1,23 @@
 package ReaderWriter;
 
+import java.io.FileNotFoundException;
+
 public class Writer implements Runnable {
 	int messageToWrite;
-	Resource connection;
+	DataManager connection;
 	
-	public Writer(int message, Resource resource) {
+	public Writer(int message, DataManager data) {
 		messageToWrite = message;
-		connection = resource;
+		connection = data;
 	}
 	
 	public void run() {
 		try {
-			Resource.write(messageToWrite);
+			DataManager.write(messageToWrite);
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
