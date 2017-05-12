@@ -8,32 +8,33 @@ import java.util.concurrent.Semaphore;
 
 public class DataManager {
 	static HashMap<String,Locker> association;
-    
-	public DataManager( ) {
+
+	public DataManager(String path) {
 		association = new HashMap<>();
 		association.put("arq1", new Locker("arq1"));
 		association.put("arq2", new Locker("arq2"));
 		association.put("arq3", new Locker("arq3"));
 	}
-	
+
 	public static String read(String name) throws InterruptedException {
 		Resource r = association.get(name).getResource();
 		association.get(name).requestRead();
-		
-		String info = r.get().doRead();
+
+		String info = r.doRead();
 		long threadId = Thread.currentThread().getId();
-		System.out.println("Thread " + threadId + " lendo do arquivo: " + info);
-		
+		System.out.println("Thread " + threadId + " lendo do arquivo "+ name +": " + info);
+
 		association.get(name).releaseRead();
-		
+
 		return info;
 	}
-	
-	public static void write(int message) throws InterruptedException, FileNotFoundException {
-		writingMutex.acquire();
-		
+
+	public static void write(String path, int message) throws InterruptedException, FileNotFoundException {
+    Resource r = association.get(path).getResource();
+    association.get(path).requestWriting();
+
 		r.doWrite(message);
-		
-		writingMutex.release();
+
+    association.get(path).releaseWriting();
 	}
 }

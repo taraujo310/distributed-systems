@@ -8,29 +8,27 @@ import ReaderWriter.Controller;
 
 public class Server implements IReaderWriter {
 	private Controller controller;
-	
+
 	public Server() {
 		controller = new Controller();
 	}
-	
-        @Override
-	public String read() throws InterruptedException {
-		return controller.read();
+
+	public String read(String path) throws InterruptedException {
+		return controller.read(path);
 	}
-	
-        @Override
-	public void write(int toInsert) {
-		controller.write(toInsert);
+
+	public void write(String path, int toInsert) throws InterruptedException {
+		controller.write(path, toInsert);
 	}
-	
+
 	public static void main(String args[]) {
 		try {
 			Server readerWriterServer = new Server();
 			IReaderWriter stub = (IReaderWriter) UnicastRemoteObject.exportObject(readerWriterServer, 0);
 			Registry registry = LocateRegistry.createRegistry(1099);
-                        
+
 			registry.bind("readerWriter", stub);
-			
+
 			System.out.println("Reader/Writer Server is ready!");
 		} catch (Exception e) {
 			System.err.println("Server Exception: " + e.getMessage());

@@ -5,15 +5,17 @@ import java.io.FileNotFoundException;
 public class Writer implements Runnable {
 	int messageToWrite;
 	DataManager connection;
-	
-	public Writer(int message, DataManager data) {
+  private String path;
+
+	public Writer(String path, int message) {
+    this.path = path;
 		messageToWrite = message;
-		connection = data;
+		connection = new DataManager(path);
 	}
-	
+
 	public void run() {
 		try {
-			DataManager.write(messageToWrite);
+			connection.write(path, messageToWrite);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -21,6 +23,6 @@ public class Writer implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
