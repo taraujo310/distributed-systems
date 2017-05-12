@@ -1,10 +1,10 @@
-package Application;
+package Protocol;
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
-import ReaderWriter.Controller;
+import Application.Controller;
 
 public class Server implements IReaderWriter {
 	private Controller controller;
@@ -13,10 +13,12 @@ public class Server implements IReaderWriter {
 		controller = new Controller();
 	}
 
+	@SuppressWarnings("static-access")
 	public String read(String path) throws InterruptedException {
 		return controller.read(path);
 	}
 
+	@SuppressWarnings("static-access")
 	public void write(String path, int toInsert) throws InterruptedException {
 		controller.write(path, toInsert);
 	}

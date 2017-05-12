@@ -1,4 +1,4 @@
-package ReaderWriter;
+package Application;
 
 public class Reader implements Runnable {
 	DataManager connection;

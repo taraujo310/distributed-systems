@@ -1,7 +1,7 @@
 package Simulator;
 
-import Application.Client;
-import Application.Client.Job;
+import Protocol.Client;
+import Protocol.Client.Job;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

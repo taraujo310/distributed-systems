@@ -1,4 +1,4 @@
-package ReaderWriter;
+package Application;
 
 import java.util.concurrent.Semaphore;
 
@@ -6,15 +6,15 @@ public class Locker {
 	Resource r;
 	int readCount = 0;
 	Semaphore mutex = new Semaphore(1);
-  Semaphore writingMutex = new Semaphore(1);
+	Semaphore writingMutex = new Semaphore(1);
 
-  public Locker(String name){
-  	r = new Resource(name);
-  }
+	public Locker(String name){
+		r = new Resource(name);
+	}
 
-  public Resource getResource(){
-  	return r;
-  }
+	public Resource getResource(){
+		return r;
+	}
 
 	public void requestRead() throws InterruptedException {
 		mutex.acquire();
@@ -32,11 +32,11 @@ public class Locker {
 		mutex.release();
 	}
 
-  public void requestWriting() throws InterruptedException {
-    writingMutex.acquire();
-  }
+	public void requestWriting() throws InterruptedException {
+		writingMutex.acquire();
+	}
 
-  public void releaseWriting() throws InterruptedException {
-    writingMutex.release();
-  }
+	public void releaseWriting() throws InterruptedException {
+		writingMutex.release();
+	}
 }
