@@ -2,15 +2,17 @@ package Application;
 
 import java.io.FileNotFoundException;
 
+import Application.DataManager.Strategy;
+
 public class Writer implements Runnable {
 	int messageToWrite;
 	DataManager connection;
-  private String path;
+	private String path;
 
-	public Writer(String path, int message) {
-    this.path = path;
+	public Writer(String path, int message, Strategy favoring) {
+		this.path = path;
 		messageToWrite = message;
-		connection = new DataManager(path);
+		connection = new DataManager(path, favoring);
 	}
 
 	public void run() {

@@ -1,13 +1,15 @@
 package Application;
 
+import Application.DataManager.Strategy;
+
 public class Reader implements Runnable {
 	DataManager connection;
 	public String read;
-  private String path;
+	private String path;
 
-	public Reader(String path) {
-		connection = new DataManager(path);
-    this.path = path;
+	public Reader(String path, Strategy favoring) {
+		connection = new DataManager(path, favoring);
+		this.path = path;
 	}
 
 	public void run() {

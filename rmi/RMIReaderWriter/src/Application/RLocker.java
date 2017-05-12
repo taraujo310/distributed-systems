@@ -2,13 +2,13 @@ package Application;
 
 import java.util.concurrent.Semaphore;
 
-public class Locker {
+public class RLocker implements RWLockable {
 	Resource r;
 	int readCount = 0;
 	Semaphore mutex = new Semaphore(1);
 	Semaphore writingMutex = new Semaphore(1);
 
-	public Locker(String name){
+	public RLocker(String name){
 		r = new Resource(name);
 	}
 
