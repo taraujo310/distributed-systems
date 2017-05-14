@@ -15,6 +15,7 @@ public class Writer implements Runnable {
 		connection = new DataManager(path, favoring);
 	}
 
+        @Override
 	public void run() {
 		try {
 			connection.write(path, messageToWrite);
@@ -24,7 +25,11 @@ public class Writer implements Runnable {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} catch (NullPointerException e){
+                    e.printStackTrace();
+                    System.out.println(e + "Path: "+path+" Msg: "+messageToWrite);
+                }
+               
 
 	}
 }

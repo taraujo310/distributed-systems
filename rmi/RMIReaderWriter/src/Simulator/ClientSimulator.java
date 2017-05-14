@@ -19,11 +19,11 @@ public class ClientSimulator {
         String file;
         
         for(int i = 0; i < major; i++) {
-        	file = files[rand.nextInt(2)];
+        	file = files[rand.nextInt(3)];
         	client = new Client(Job.READ, file);
         	threads.add(new Thread(client));
         	
-        	file = files[rand.nextInt(2)];
+        	file = files[rand.nextInt(3)];
         	client = new Client(Job.WRITE, file, rand.nextInt(100));
         	threads.add(new Thread(client));
         }

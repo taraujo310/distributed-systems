@@ -20,25 +20,27 @@ public class DataManager {
 
 	public String read(String name) throws InterruptedException {
 		String info = "";
-		Resource r = association.get(name).getResource();
-		association.get(name).requestRead();
+		RWLockable lock = association.get(name);
+                Resource r = lock.getResource();
+		lock.requestRead();
 
 		info = r.doRead();
 		long threadId = Thread.currentThread().getId();
 		System.out.println("Thread " + threadId + " lendo do arquivo " + name + ": " + info);
 
-		association.get(name).releaseRead();
+		lock.releaseRead();
 
 		return info;
 	}
 
 	public void write(String path, int message) throws InterruptedException, FileNotFoundException {
-		Resource r = association.get(path).getResource();
-		association.get(path).requestWriting();
+                RWLockable lock = association.get(path);
+		Resource r = lock.getResource();
+		lock.requestWriting();
 
 		r.doWrite(message);
 
-		association.get(path).releaseWriting();
+		lock.releaseWriting();
 	}
 	
 	private RWLockable LockerFactory(Strategy choice, String filepath) {

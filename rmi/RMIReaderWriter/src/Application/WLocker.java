@@ -7,7 +7,6 @@ public class WLocker implements RWLockable {
 	int readersCounter = 0, writersCounter = 0;
 	Semaphore readersCounterMutex = new Semaphore(1), // protects readersCounter
 			writersCounterMutex = new Semaphore(1), // protects writersCounter
-			readersLockerMutex = new Semaphore(1), // Protects readers locker
 			closeToWriters = new Semaphore(1),
 			closeToReaders = new Semaphore(1);
 	
@@ -22,7 +21,6 @@ public class WLocker implements RWLockable {
 
 	@Override
 	public void requestRead() throws InterruptedException {
-		readersLockerMutex.acquire();
 		closeToReaders.acquire();
 		readersCounterMutex.acquire();
 		
@@ -31,7 +29,6 @@ public class WLocker implements RWLockable {
 		
 		readersCounterMutex.release();
 		closeToReaders.release();
-		readersLockerMutex.release();
 	}
 
 	@Override
