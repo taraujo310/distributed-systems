@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class DataManager {
 	static HashMap<String, RWLockable> association;
-	
+
 	public static enum Strategy {
         FAVORING_READERS,
         FAVORING_WRITERS
@@ -34,7 +34,7 @@ public class DataManager {
 	}
 
 	public void write(String path, int message) throws InterruptedException, FileNotFoundException {
-                RWLockable lock = association.get(path);
+    RWLockable lock = association.get(path);
 		Resource r = lock.getResource();
 		lock.requestWriting();
 
@@ -42,14 +42,14 @@ public class DataManager {
 
 		lock.releaseWriting();
 	}
-	
+
 	private RWLockable LockerFactory(Strategy choice, String filepath) {
 		switch(choice) {
 		case FAVORING_READERS:
 			return new RLocker(filepath);
 		case FAVORING_WRITERS:
 			return new WLocker(filepath);
-		default: 
+		default:
 			return new RLocker(filepath);
 		}
 	}
