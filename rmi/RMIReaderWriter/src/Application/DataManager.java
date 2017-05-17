@@ -8,7 +8,8 @@ public class DataManager {
 
 	public static enum Strategy {
         FAVORING_READERS,
-        FAVORING_WRITERS
+        FAVORING_WRITERS,
+        SELFISH
     }
 
 	public DataManager(String path, Strategy favoring) {
@@ -49,6 +50,8 @@ public class DataManager {
 			return new RLocker(filepath);
 		case FAVORING_WRITERS:
 			return new WLocker(filepath);
+		case SELFISH:
+			return new NLocker(filepath);
 		default:
 			return new RLocker(filepath);
 		}
