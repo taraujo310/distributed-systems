@@ -4,7 +4,7 @@ server = DRbObject.new_with_uri('druby://localhost:61676')
 number_of_readers = rand(1..100)
 number_of_writers = rand(1..100)
 
-server.define_strategy(:favoring_writers)
+server.define_strategy(:no_favoring)
 
 @threads = []
 

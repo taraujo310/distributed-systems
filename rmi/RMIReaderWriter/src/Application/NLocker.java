@@ -4,10 +4,10 @@ import java.util.concurrent.Semaphore;
 
 public class NLocker implements RWLockable {
 	Resource r;
-	int readCount = 0;
-	Semaphore readersFlow = new Semaphore(1); // Fluxo de leitores
-	Semaphore writersFlow = new Semaphore(1); // Fluxo de escritores
-	Semaphore protector = new Semaphore(1); // Protetor para decremento de leitores em bloco e liberação para fluxo de escritores
+	int readersCounter = 0;
+	Semaphore queueMutex = new Semaphore(1); // Fila de threads ou a ordem delas
+	Semaphore readersCounterMutex = new Semaphore(1); // protege o readersCounter
+	Semaphore resourceMutex = new Semaphore(1); // Protege o recurso
 
 	public NLocker(String name){
 		r = new Resource(name);
@@ -18,28 +18,32 @@ public class NLocker implements RWLockable {
 	}
 
 	public void requestRead() throws InterruptedException {
-		readersFlow.acquire();
-		readCount++;
-		if(readCount == 1)
-			writersFlow.acquire();
-		readersFlow.release();
+		queueMutex.acquire();
+
+    readersCounterMutex.acquire();
+		if(++readersCounter == 1)
+			resourceMutex.acquire();
+
+    queueMutex.release();
+    readersCounterMutex.release();
 	}
 
 	public void releaseRead()  throws InterruptedException {
-		protector.acquire();
-		readCount--;
-		if(readCount == 0)
-			writersFlow.release();
-		protector.release();
+		readersCounterMutex.acquire();
+
+		if(--readersCounter == 0)
+			resourceMutex.release();
+
+    readersCounterMutex.release();
 	}
 
 	public void requestWriting() throws InterruptedException {
-		readersFlow.acquire();
-		writersFlow.acquire();
+		queueMutex.acquire();
+		resourceMutex.acquire();
+    queueMutex.release();
 	}
 
 	public void releaseWriting() throws InterruptedException {
-		writersFlow.release();
-		readersFlow.release();
+		resourceMutex.release();
 	}
 }

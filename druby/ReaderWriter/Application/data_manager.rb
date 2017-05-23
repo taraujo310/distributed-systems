@@ -41,8 +41,10 @@ class DataManager
         RLocker.new(filepath)
       when :favoring_writers
         WLocker.new(filepath)
+      when :no_favoring
+        NLocker.new(filepath)
       else
-        RLocker.new(filepath)
+        NLocker.new(filepath)
     end
   end
 end
