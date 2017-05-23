@@ -2,9 +2,11 @@ package Application;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 public class DataManager {
 	static HashMap<String, RWLockable> association;
+  Semaphore mapMutex = new Semaphore(1);
 
 	public static enum Strategy {
         FAVORING_READERS,
@@ -20,8 +22,12 @@ public class DataManager {
 
 	public String read(String name) throws InterruptedException {
 		String info = "";
+
+    mapMutex.acquire();
 		RWLockable lock = association.get(name);
-                Resource r = lock.getResource();
+    Resource r = lock.getResource();
+    mapMutex.release();
+
 		lock.requestRead();
 
 		info = r.doRead();
@@ -34,8 +40,11 @@ public class DataManager {
 	}
 
 	public void write(String path, int message) throws InterruptedException, FileNotFoundException {
+    mapMutex.acquire();
     RWLockable lock = association.get(path);
 		Resource r = lock.getResource();
+    mapMutex.release();
+
 		lock.requestWriting();
 
 		r.doWrite(message);

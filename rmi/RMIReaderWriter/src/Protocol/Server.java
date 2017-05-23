@@ -16,7 +16,7 @@ public class Server implements IReaderWriter {
 		controller = new Controller();
 	}
 
-        @Override
+  @Override
 	public String read(String path) throws InterruptedException {
 		return controller.read(path);
 	}
@@ -25,7 +25,7 @@ public class Server implements IReaderWriter {
 	public void write(String path, int toInsert) throws InterruptedException {
 		controller.write(path, toInsert);
 	}
-	
+
 	private static void setController(Controller ctrl) {
 		controller = ctrl;
 	}
@@ -37,12 +37,12 @@ public class Server implements IReaderWriter {
 			Registry registry = LocateRegistry.createRegistry(1099);
 
 			registry.bind("readerWriter", stub);
-			
+
 			if(args.length > 0 && args[0].equals("-R")) {
 				setController(new Controller(Strategy.FAVORING_READERS));
 			}else{
-                            	setController(new Controller(Strategy.FAVORING_WRITERS));
-                        }
+        setController(new Controller(Strategy.FAVORING_WRITERS));
+      }
 
 			System.out.println("Reader/Writer Server is ready!");
 		} catch (AlreadyBoundException | RemoteException e) {
