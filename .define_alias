@@ -1,0 +1,10 @@
+# For Java
+alias java_compile_rw="javac -d bin/ src/Application/* src/Protocol/* src/Simulator/* -Xdiags:verbose"
+alias java_rw_server="java -cp bin/ Protocol.Server"
+alias java_rw_client="java -cp bin/ Simulator.ClientSimulator"
+
+
+# For Ruby
+alias ruby_rw_server="ruby Protocol/server.rb"
+alias ruby_rw_client="ruby Protocol/client.rb"
+
