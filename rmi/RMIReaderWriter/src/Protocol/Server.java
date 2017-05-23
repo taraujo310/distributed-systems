@@ -39,13 +39,13 @@ public class Server implements IReaderWriter {
 			registry.bind("readerWriter", stub);
 			
 			if(args.length > 0 && args[0].equals("-R")) {
-				setController(new Controller(Strategy.FAVORING_READERS));
+                            setController(new Controller(Strategy.FAVORING_READERS));
 			}
-			if(args.length > 0 && args[0].equals("-W")) {
-            	setController(new Controller(Strategy.FAVORING_WRITERS));
+                        else if(args.length > 0 && args[0].equals("-W")) {
+                            setController(new Controller(Strategy.FAVORING_WRITERS));
 			}
-			if(args.length > 0 && args[0].equals("-N")) {
-            	setController(new Controller(Strategy.SELFISH));
+			else {
+                            setController(new Controller(Strategy.SELFISH));
 			}
 
 			System.out.println("Reader/Writer Server is ready!");
