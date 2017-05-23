@@ -39,10 +39,12 @@ public class Server implements IReaderWriter {
 			registry.bind("readerWriter", stub);
 
 			if(args.length > 0 && args[0].equals("-R")) {
-				setController(new Controller(Strategy.FAVORING_READERS));
-			}else{
+        setController(new Controller(Strategy.FAVORING_READERS));
+			} else if(args.length > 0 && args[0].equals("-W")) {
         setController(new Controller(Strategy.FAVORING_WRITERS));
-      }
+			} else {
+        setController(new Controller(Strategy.SELFISH));
+			}
 
 			System.out.println("Reader/Writer Server is ready!");
 		} catch (AlreadyBoundException | RemoteException e) {
