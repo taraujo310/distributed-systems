@@ -12,13 +12,15 @@ public class Client implements Runnable{
     private Job job;
     private int value;
     private String path;
+    private boolean verbose = true;
 
     public static enum Job{
         READ,
         WRITE
     }
-    public Client(Job job, String path) {
+    public Client(Job job, String path, boolean verbose) {
         this(job, path, 0);
+        this.verbose = verbose;
     }
     public Client(Job job, String path, int value) {
         try {
@@ -41,14 +43,15 @@ public class Client implements Runnable{
         }
     }
 
-    public void read(String path) throws InterruptedException  {
+    public void read(String path, boolean verbose) throws InterruptedException  {
         String info = null;
         try {
             info = stub.read(path);
         } catch (RemoteException | InterruptedException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(info);
+
+        if(verbose) System.out.println(info);
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Client implements Runnable{
       try{
         switch(job){
             case READ:
-                read(path);
+                read(path, verbose);
                 break;
             case WRITE:
                 write(path, value);

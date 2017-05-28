@@ -33,7 +33,7 @@ public class DataManager {
 
 		info = r.doRead();
 		long threadId = Thread.currentThread().getId();
-		System.out.println("Thread " + threadId + " lendo do arquivo " + name + ": " + info);
+		System.out.println("Thread " + threadId + " lendo do arquivo " + name + ".");
 
 		lock.releaseRead();
 
