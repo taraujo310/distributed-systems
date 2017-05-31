@@ -79,8 +79,10 @@ public class ClientSimulator {
       long hours   = milliToHours(elapsed);
       String formatted = String.format("%03d:%02d:%02d", hours, minutes, seconds);
 
+      long seconds_per_execution = (long) seconds / numberOfExecutions;
+
       System.out.println("Inicial\t\tFinal\t\tTotal\t\tTotal\t\tPor Execução");
-      System.out.println(start+"\t"+end+"\t"+end+"ms\t"+formatted+"\t"+(long)seconds / numberOfExecutions);
+      System.out.println(start+"\t"+end+"\t"+elapsed+"ms\t"+formatted+"\t"+seconds_per_execution);
 		}
 	}
 
