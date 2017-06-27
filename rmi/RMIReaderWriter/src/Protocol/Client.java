@@ -23,9 +23,15 @@ public class Client implements Runnable{
         this.verbose = verbose;
     }
     public Client(Job job, String path, int value) {
+        System.setProperty("java.security.policy","test.policy");
+
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
         try {
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry("52.11.214.161", 1099);
             stub = (IReaderWriter) registry.lookup("readerWriter");
+
             this.path = path;
             this.job = job;
             this.value = value;

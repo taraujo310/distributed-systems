@@ -83,3 +83,6 @@ dkms.conf
 # End of https://www.gitignore.io/api/c,linux,executable
 .DS_Store
 .byebug_history
+rmi/RMIReaderWriter/my-ppk
+rmi/RMIReaderWriter/my-ssh-key
+rmi/RMIReaderWriter/test.policy

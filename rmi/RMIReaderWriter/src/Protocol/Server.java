@@ -31,6 +31,13 @@ public class Server implements IReaderWriter {
 	}
 
 	public static void main(String args[]) {
+		System.setProperty("java.security.policy","test.policy");
+		System.setProperty("java.rmi.server.hostname", "localhost");
+
+		if (System.getSecurityManager() == null) {
+				System.setSecurityManager(new SecurityManager());
+		}
+
 		try {
 			Server readerWriterServer = new Server();
 			IReaderWriter stub = (IReaderWriter) UnicastRemoteObject.exportObject(readerWriterServer, 0);

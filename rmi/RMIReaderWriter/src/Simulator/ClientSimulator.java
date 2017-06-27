@@ -10,10 +10,10 @@ public class ClientSimulator {
 
 	public static void main(String[] args) {
 //		Random rand = new Random();
-		int numberOfReaders = 8, numberOfWriters = 8;
+		int numberOfReaders = 0, numberOfWriters = 1;
 		String[] files = new String[] { "arq1", "arq2", "arq3" };
 
-		simulate(files, numberOfReaders, numberOfWriters, true, 10000);
+		simulate(files, numberOfReaders, numberOfWriters, false, 5);
 	}
 
 	private static void simulate(String[] files, int numberOfReaders, int numberOfWriters, boolean doBenchmark,
@@ -28,7 +28,7 @@ public class ClientSimulator {
 		int major = (numberOfReaders > numberOfWriters) ? numberOfReaders : numberOfWriters;
 
 		if (doBenchmark) {
-      verbose = false;
+      verbose = true;
       System.out.println("Desligando os prints do Cliente...");
       System.out.println("Iniciando o benchmark...");
 			start = System.currentTimeMillis();
@@ -47,18 +47,22 @@ public class ClientSimulator {
       List<Thread> threads = new ArrayList<>();
 
 			for (int i = 0; i < major; i++) {
-				file = files[rand.nextInt(3)];
-				client = new Client(Job.READ, file, verbose);
-				threads.add(new Thread(client));
+				System.out.println("Iniciando Thread " + i);
+				// file = files[rand.nextInt(3)];
+				// client = new Client(Job.READ, file, verbose);
+				// threads.add(new Thread(client));
 
 				file = files[rand.nextInt(3)];
 				client = new Client(Job.WRITE, file, rand.nextInt(100));
 				threads.add(new Thread(client));
+				System.out.println("Thread " + i + " Iniciada");
 			}
 
 			for (Thread thread : threads) {
 				thread.start();
 			}
+			System.out.println("Threads iniciadas");
+
 
 			for (Thread thread : threads) {
 				try {
